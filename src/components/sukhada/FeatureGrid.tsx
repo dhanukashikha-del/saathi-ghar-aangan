@@ -26,7 +26,7 @@ export function FeatureGrid() {
           </div>
 
           <div className="flex-1 flex items-end justify-start px-4 pb-3">
-            <Users size={92} color="rgba(255,255,255,0.55)" strokeWidth={1.6} />
+            <UsersRound size={92} color="rgba(255,255,255,0.55)" strokeWidth={1.6} />
           </div>
 
           <div
@@ -76,7 +76,7 @@ export function FeatureGrid() {
           style={{ backgroundColor: "var(--jade-soft)", minHeight: 172 }}
         >
           <div className="flex justify-center">
-            <HeartHandshake size={36} color="var(--jade)" strokeWidth={1.8} />
+            <Coffee size={36} color="var(--jade)" strokeWidth={1.8} />
           </div>
           <div>
             <h3
@@ -101,7 +101,7 @@ export function FeatureGrid() {
           style={{ backgroundColor: "var(--gold-soft)", minHeight: 172 }}
         >
           <div className="flex justify-center">
-            <Activity size={36} color="#8a6610" strokeWidth={1.8} />
+            <HeartPulse size={36} color="#8a6610" strokeWidth={1.8} />
           </div>
           <div>
             <h3
@@ -133,7 +133,7 @@ export function FeatureGrid() {
             background: "linear-gradient(135deg, var(--gold), var(--marigold))",
           }}
         >
-          <Music size={22} color="#fff" strokeWidth={2} />
+          <CalendarDays size={22} color="#fff" strokeWidth={2} />
         </span>
         <div className="flex-1 min-w-0 text-left">
           <p
