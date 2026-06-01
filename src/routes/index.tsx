@@ -33,9 +33,10 @@ function Home() {
             <h2
               id="discover-heading"
               className="font-serif text-ink mb-4"
-              style={{ fontSize: "22px", fontWeight: 500 }}
+              style={{ fontSize: "28px", fontWeight: 600, lineHeight: 1.1 }}
             >
-              What would you like today?
+              What do you{" "}
+              <span style={{ color: "var(--marigold)", fontStyle: "normal" }}>need?</span>
             </h2>
             <FeatureGrid />
           </section>
