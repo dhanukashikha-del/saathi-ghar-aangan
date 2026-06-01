@@ -1,4 +1,4 @@
-import { ChevronRight, Users, HeartHandshake, Activity, Music } from "lucide-react";
+import { ChevronRight, UsersRound, Coffee, HeartPulse, CalendarDays } from "lucide-react";
 
 export function FeatureGrid() {
   return (
