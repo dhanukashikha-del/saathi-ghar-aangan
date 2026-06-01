@@ -1,71 +1,161 @@
-type Tile = {
-  title: string;
-  subline: string;
-  bg: string;
-  fg: string;
-  illustration: React.ReactNode;
-};
-
-function TileCard({ tile }: { tile: Tile }) {
-  return (
-    <button
-      type="button"
-      className="relative overflow-hidden rounded-card text-left p-4 active:scale-[0.98] transition"
-      style={{ backgroundColor: tile.bg, height: 160 }}
-    >
-      <h3 className="font-serif" style={{ fontSize: "18px", fontWeight: 600, color: tile.fg, lineHeight: 1.2 }}>
-        {tile.title}
-      </h3>
-      <p className="mt-1 font-sans" style={{ fontSize: "13px", color: "var(--ink-2)", maxWidth: "85%" }}>
-        {tile.subline}
-      </p>
-      <div className="absolute bottom-2 right-2 opacity-90 pointer-events-none">
-        {tile.illustration}
-      </div>
-    </button>
-  );
-}
-
-const sz = 64;
-
-const CircleIllus = (
-  <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none">
-    <circle cx="22" cy="28" r="9" stroke="#6B3D58" strokeWidth="2.2" />
-    <circle cx="42" cy="28" r="9" stroke="#6B3D58" strokeWidth="2.2" />
-    <path d="M10 52c2-7 8-11 14-11M54 52c-2-7-8-11-14-11" stroke="#6B3D58" strokeWidth="2.2" strokeLinecap="round" />
-  </svg>
-);
-const SaathiIllus = (
-  <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none">
-    <path d="M32 50s-16-9-16-22a10 10 0 0 1 16-8 10 10 0 0 1 16 8c0 13-16 22-16 22Z" stroke="#1F7A6B" strokeWidth="2.2" strokeLinejoin="round" />
-  </svg>
-);
-const HealthIllus = (
-  <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none">
-    <rect x="14" y="22" width="36" height="24" rx="6" stroke="#D9A21B" strokeWidth="2.2" />
-    <path d="M32 28v12M26 34h12" stroke="#D9A21B" strokeWidth="2.2" strokeLinecap="round" />
-  </svg>
-);
-const EventsIllus = (
-  <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none">
-    <rect x="12" y="18" width="40" height="32" rx="5" stroke="#E8761F" strokeWidth="2.2" />
-    <path d="M12 28h40M22 14v8M42 14v8" stroke="#E8761F" strokeWidth="2.2" strokeLinecap="round" />
-  </svg>
-);
-
-const tiles: Tile[] = [
-  { title: "Your Circle", subline: "friends, posts, birthdays", bg: "var(--plum-soft)", fg: "var(--plum)", illustration: CircleIllus },
-  { title: "Saathi", subline: "request a volunteer visit", bg: "var(--jade-soft)", fg: "var(--jade)", illustration: SaathiIllus },
-  { title: "Health", subline: "medicines, vitals, doctor", bg: "var(--gold-soft)", fg: "#8a6610", illustration: HealthIllus },
-  { title: "Events near you", subline: "in your neighbourhood", bg: "var(--marigold-soft)", fg: "var(--marigold)", illustration: EventsIllus },
-];
+import { ChevronRight, Users, HeartHandshake, Activity, Music } from "lucide-react";
 
 export function FeatureGrid() {
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {tiles.map((t) => (
-        <TileCard key={t.title} tile={t} />
-      ))}
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        {/* Hero tile — Your Circle */}
+        <button
+          type="button"
+          className="relative overflow-hidden rounded-card text-left row-span-2 active:scale-[0.99] transition flex flex-col"
+          style={{ backgroundColor: "var(--marigold)", minHeight: 360 }}
+        >
+          <div className="flex items-start justify-end p-4">
+            <span
+              className="rounded-full bg-white font-sans"
+              style={{
+                color: "var(--ink)",
+                fontSize: "12px",
+                fontWeight: 600,
+                padding: "6px 12px",
+                letterSpacing: "0.04em",
+              }}
+            >
+              3 NEW
+            </span>
+          </div>
+
+          <div className="flex-1 flex items-end justify-start px-4 pb-3">
+            <Users size={92} color="rgba(255,255,255,0.55)" strokeWidth={1.6} />
+          </div>
+
+          <div
+            className="m-3 rounded-2xl bg-white px-4 py-3 flex items-center gap-3"
+          >
+            <div className="flex-1 min-w-0">
+              <span
+                className="inline-block rounded-full"
+                style={{
+                  backgroundColor: "var(--marigold-soft)",
+                  color: "var(--marigold)",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "4px 10px",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                SOCIAL FEED
+              </span>
+              <p
+                className="mt-2 font-serif text-ink"
+                style={{ fontSize: "20px", fontWeight: 600, lineHeight: 1.15 }}
+              >
+                Your Circle
+              </p>
+              <p
+                className="mt-0.5 font-sans"
+                style={{ fontSize: "13px", color: "var(--ink-2)" }}
+              >
+                Catch up with friends
+              </p>
+            </div>
+            <span
+              aria-hidden
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+              style={{ backgroundColor: "var(--marigold-soft)" }}
+            >
+              <ChevronRight size={20} color="var(--marigold)" />
+            </span>
+          </div>
+        </button>
+
+        {/* Jade — Need company today */}
+        <button
+          type="button"
+          className="relative overflow-hidden rounded-card text-left p-4 active:scale-[0.98] transition flex flex-col justify-between"
+          style={{ backgroundColor: "var(--jade-soft)", minHeight: 172 }}
+        >
+          <div className="flex justify-center">
+            <HeartHandshake size={36} color="var(--jade)" strokeWidth={1.8} />
+          </div>
+          <div>
+            <h3
+              className="font-serif"
+              style={{ fontSize: "20px", fontWeight: 600, color: "var(--jade)", lineHeight: 1.15 }}
+            >
+              Need company<br />today?
+            </h3>
+            <p
+              className="mt-1 font-sans"
+              style={{ fontSize: "13px", color: "var(--ink-2)" }}
+            >
+              Book a SukhSathi
+            </p>
+          </div>
+        </button>
+
+        {/* Gold — Track your health */}
+        <button
+          type="button"
+          className="relative overflow-hidden rounded-card text-left p-4 active:scale-[0.98] transition flex flex-col justify-between"
+          style={{ backgroundColor: "var(--gold-soft)", minHeight: 172 }}
+        >
+          <div className="flex justify-center">
+            <Activity size={36} color="#8a6610" strokeWidth={1.8} />
+          </div>
+          <div>
+            <h3
+              className="font-serif"
+              style={{ fontSize: "20px", fontWeight: 600, color: "#8a6610", lineHeight: 1.15 }}
+            >
+              Track your<br />health
+            </h3>
+            <p
+              className="mt-1 font-sans"
+              style={{ fontSize: "13px", color: "var(--ink-2)" }}
+            >
+              Meds, vitals, reports
+            </p>
+          </div>
+        </button>
+      </div>
+
+      {/* Plum ribbon — Events near you */}
+      <button
+        type="button"
+        className="w-full flex items-center gap-4 rounded-card p-4 active:scale-[0.99] transition"
+        style={{ backgroundColor: "var(--plum)", minHeight: 80 }}
+      >
+        <span
+          aria-hidden
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
+          style={{
+            background: "linear-gradient(135deg, var(--gold), var(--marigold))",
+          }}
+        >
+          <Music size={22} color="#fff" strokeWidth={2} />
+        </span>
+        <div className="flex-1 min-w-0 text-left">
+          <p
+            className="font-sans uppercase"
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.14em",
+              color: "var(--marigold-soft)",
+              fontWeight: 600,
+            }}
+          >
+            Upcoming
+          </p>
+          <p
+            className="font-serif text-white"
+            style={{ fontSize: "18px", fontWeight: 500, lineHeight: 1.2 }}
+          >
+            Events near you
+          </p>
+        </div>
+        <ChevronRight size={22} color="rgba(255,255,255,0.85)" className="shrink-0" />
+      </button>
     </div>
   );
 }
