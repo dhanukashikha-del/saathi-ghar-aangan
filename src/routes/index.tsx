@@ -1,29 +1,55 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/sukhada/Header";
+import { NudgeCard } from "@/components/sukhada/NudgeCard";
+import { FeatureGrid } from "@/components/sukhada/FeatureGrid";
+import { HumansStrip } from "@/components/sukhada/HumansStrip";
+import { TalkToUsCard } from "@/components/sukhada/TalkToUsCard";
+import { BottomNav } from "@/components/sukhada/BottomNav";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Sukhada — Your circle of care" },
+      { name: "description", content: "A warm, volunteer-powered care network for Indian senior citizens. Saathi visits, health, events and your circle — all in one place." },
+      { property: "og:title", content: "Sukhada — Your circle of care" },
+      { property: "og:description", content: "A warm, volunteer-powered care network for Indian senior citizens." },
     ],
   }),
-  component: Index,
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-dvh bg-paper">
+      <div className="mx-auto w-full max-w-[480px] pb-28">
+        <Header />
+
+        <main>
+          <section className="px-5 mt-2">
+            <NudgeCard />
+          </section>
+
+          <section className="mt-8 px-5" aria-labelledby="discover-heading">
+            <h2
+              id="discover-heading"
+              className="font-serif text-ink mb-4"
+              style={{ fontSize: "22px", fontWeight: 500 }}
+            >
+              What would you like today?
+            </h2>
+            <FeatureGrid />
+          </section>
+
+          <section className="mt-8">
+            <HumansStrip />
+          </section>
+
+          <section className="mt-8 px-5">
+            <TalkToUsCard />
+          </section>
+        </main>
+      </div>
+      <BottomNav active="home" />
     </div>
   );
 }
