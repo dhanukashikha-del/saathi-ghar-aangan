@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as CircleRouteImport } from './routes/circle'
+import { Route as BookingWaitingRouteImport } from './routes/booking-waiting'
+import { Route as BookingRecapRouteImport } from './routes/booking-recap'
+import { Route as BookingConfirmRouteImport } from './routes/booking-confirm'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VolunteerRoute = VolunteerRouteImport.update({
@@ -29,6 +32,21 @@ const CircleRoute = CircleRouteImport.update({
   path: '/circle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingWaitingRoute = BookingWaitingRouteImport.update({
+  id: '/booking-waiting',
+  path: '/booking-waiting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRecapRoute = BookingRecapRouteImport.update({
+  id: '/booking-recap',
+  path: '/booking-recap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingConfirmRoute = BookingConfirmRouteImport.update({
+  id: '/booking-confirm',
+  path: '/booking-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +55,18 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/booking-confirm': typeof BookingConfirmRoute
+  '/booking-recap': typeof BookingRecapRoute
+  '/booking-waiting': typeof BookingWaitingRoute
   '/circle': typeof CircleRoute
   '/health': typeof HealthRoute
   '/volunteer': typeof VolunteerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/booking-confirm': typeof BookingConfirmRoute
+  '/booking-recap': typeof BookingRecapRoute
+  '/booking-waiting': typeof BookingWaitingRoute
   '/circle': typeof CircleRoute
   '/health': typeof HealthRoute
   '/volunteer': typeof VolunteerRoute
@@ -50,20 +74,48 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/booking-confirm': typeof BookingConfirmRoute
+  '/booking-recap': typeof BookingRecapRoute
+  '/booking-waiting': typeof BookingWaitingRoute
   '/circle': typeof CircleRoute
   '/health': typeof HealthRoute
   '/volunteer': typeof VolunteerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/circle' | '/health' | '/volunteer'
+  fullPaths:
+    | '/'
+    | '/booking-confirm'
+    | '/booking-recap'
+    | '/booking-waiting'
+    | '/circle'
+    | '/health'
+    | '/volunteer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/circle' | '/health' | '/volunteer'
-  id: '__root__' | '/' | '/circle' | '/health' | '/volunteer'
+  to:
+    | '/'
+    | '/booking-confirm'
+    | '/booking-recap'
+    | '/booking-waiting'
+    | '/circle'
+    | '/health'
+    | '/volunteer'
+  id:
+    | '__root__'
+    | '/'
+    | '/booking-confirm'
+    | '/booking-recap'
+    | '/booking-waiting'
+    | '/circle'
+    | '/health'
+    | '/volunteer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookingConfirmRoute: typeof BookingConfirmRoute
+  BookingRecapRoute: typeof BookingRecapRoute
+  BookingWaitingRoute: typeof BookingWaitingRoute
   CircleRoute: typeof CircleRoute
   HealthRoute: typeof HealthRoute
   VolunteerRoute: typeof VolunteerRoute
@@ -92,6 +144,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CircleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking-waiting': {
+      id: '/booking-waiting'
+      path: '/booking-waiting'
+      fullPath: '/booking-waiting'
+      preLoaderRoute: typeof BookingWaitingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking-recap': {
+      id: '/booking-recap'
+      path: '/booking-recap'
+      fullPath: '/booking-recap'
+      preLoaderRoute: typeof BookingRecapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking-confirm': {
+      id: '/booking-confirm'
+      path: '/booking-confirm'
+      fullPath: '/booking-confirm'
+      preLoaderRoute: typeof BookingConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +177,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookingConfirmRoute: BookingConfirmRoute,
+  BookingRecapRoute: BookingRecapRoute,
+  BookingWaitingRoute: BookingWaitingRoute,
   CircleRoute: CircleRoute,
   HealthRoute: HealthRoute,
   VolunteerRoute: VolunteerRoute,
@@ -111,3 +187,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
