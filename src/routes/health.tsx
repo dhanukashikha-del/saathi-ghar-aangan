@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronRight,
   Pill,
-  CalendarHeart,
+  CalendarDays,
   FileText,
-  HeartPulse,
+  Heart,
   Users,
   AlertCircle,
   Bell,
@@ -37,45 +37,19 @@ function HealthScreen() {
       <div className="mx-auto w-full max-w-[480px] pb-28">
         <HealthHeader />
 
-        <main>
-          {/* Refill nudge */}
-          <section className="px-5 mt-2">
-            <RefillNudge />
-          </section>
+        <main className="px-5 space-y-6">
+          <RefillNudge />
+          <TodayGreeting />
 
-          {/* Hero — today snapshot */}
-          <section className="px-5 mt-5" aria-labelledby="today-heading">
-            <p
-              className="font-sans uppercase text-marigold"
-              style={{ fontSize: "11px", letterSpacing: "0.14em", fontWeight: 600 }}
-            >
-              Today
-            </p>
-            <h2
-              id="today-heading"
-              className="mt-2 font-serif text-ink"
-              style={{ fontSize: "28px", fontWeight: 600, lineHeight: 1.1 }}
-            >
-              Your Health,{" "}
-              <span style={{ color: "var(--marigold)" }}>Ji</span>
-            </h2>
-            <p
-              className="mt-2 font-sans"
-              style={{ fontSize: "15px", color: "var(--ink-2)" }}
-            >
-              2 medicines due today · Stay on track
-            </p>
-          </section>
-
-          {/* Bento grid of sections */}
-          <section className="px-5 mt-5" aria-label="Health sections">
-            <HealthGrid />
-          </section>
-
-          {/* Family ribbon */}
-          <section className="px-5 mt-4">
+          <div className="space-y-4">
+            <MedicationsCard />
+            <VitalsCard />
+            <div className="grid grid-cols-2 gap-4">
+              <AppointmentsCard />
+              <ReportsCard />
+            </div>
             <FamilyRibbon />
-          </section>
+          </div>
         </main>
       </div>
       <BottomNav active="health" />
@@ -106,6 +80,11 @@ function HealthHeader() {
           className="relative flex h-12 w-12 items-center justify-center rounded-full bg-surface border border-line active:scale-95 transition"
         >
           <Bell size={22} color="var(--ink)" strokeWidth={2} />
+          <span
+            aria-hidden
+            className="absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full border-2 border-surface"
+            style={{ backgroundColor: "var(--saffron)" }}
+          />
         </button>
       </div>
     </header>
@@ -116,172 +95,264 @@ function RefillNudge() {
   return (
     <button
       type="button"
-      className="w-full text-left rounded-card border p-4 flex items-center gap-4 active:scale-[0.99] transition"
-      style={{
-        backgroundColor: "var(--marigold-soft)",
-        borderColor: "rgba(232,118,31,0.18)",
-        minHeight: 80,
-      }}
+      className="w-full text-left rounded-card p-5 flex items-start gap-4 active:scale-[0.99] transition"
+      style={{ backgroundColor: "var(--marigold-soft)", minHeight: 88 }}
     >
-      <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white"
-      >
-        <AlertCircle size={22} color="var(--marigold)" strokeWidth={2} />
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
+        <AlertCircle size={22} color="var(--marigold)" strokeWidth={2.5} />
       </div>
       <div className="min-w-0 flex-1">
         <p
           className="font-serif text-ink"
-          style={{ fontSize: "17px", fontWeight: 600, lineHeight: 1.3 }}
+          style={{ fontSize: "18px", fontWeight: 600, lineHeight: 1.25 }}
         >
           Refill check needed
         </p>
         <p
           className="mt-1 font-sans"
-          style={{ fontSize: "14px", color: "var(--ink-2)" }}
+          style={{ fontSize: "15px", color: "var(--ink-2)" }}
         >
-          Amlodipine is 26 days old · Tap to reorder
+          Amlodipine is 26 days old. Tap to reorder.
         </p>
       </div>
-      <ChevronRight size={22} color="var(--marigold)" className="shrink-0" />
+      <ChevronRight size={20} color="var(--marigold)" className="shrink-0 mt-1" />
     </button>
   );
 }
 
-function HealthGrid() {
+function TodayGreeting() {
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        {/* Medicines — tall gold hero */}
-        <button
-          type="button"
-          className="relative overflow-hidden rounded-card text-left row-span-2 active:scale-[0.99] transition flex flex-col"
-          style={{ backgroundColor: "var(--gold-soft)", minHeight: 360 }}
+    <div>
+      <p
+        className="font-sans uppercase"
+        style={{
+          fontSize: "11px",
+          letterSpacing: "0.16em",
+          fontWeight: 700,
+          color: "var(--marigold)",
+        }}
+      >
+        Today
+      </p>
+      <h1
+        className="mt-1 font-serif text-ink"
+        style={{ fontSize: "30px", fontWeight: 600, lineHeight: 1.1 }}
+      >
+        Your Health, <span style={{ color: "var(--marigold)" }}>Ji</span>
+      </h1>
+      <p
+        className="mt-2 font-sans"
+        style={{ fontSize: "16px", color: "var(--ink-2)" }}
+      >
+        2 medicines due today · Stay on track
+      </p>
+    </div>
+  );
+}
+
+function MedicationsCard() {
+  const taken = 3;
+  const total = 5;
+  const pct = (taken / total) * 100;
+  const accent = "#8a6610";
+  return (
+    <button
+      type="button"
+      className="w-full text-left rounded-card p-5 active:scale-[0.99] transition relative overflow-hidden"
+      style={{ backgroundColor: "var(--gold-soft)" }}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <span
+            className="inline-block rounded-full px-3 py-1 font-sans uppercase"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.6)",
+              color: accent,
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+            }}
+          >
+            Dawai
+          </span>
+          <h3
+            className="mt-3 font-serif"
+            style={{ fontSize: "24px", fontWeight: 600, color: accent, lineHeight: 1.15 }}
+          >
+            Medications
+          </h3>
+          <p
+            className="mt-1 font-sans"
+            style={{ fontSize: "16px", color: accent, opacity: 0.85 }}
+          >
+            5 active · 2 due today
+          </p>
+        </div>
+        <span
+          aria-hidden
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
+          style={{ backgroundColor: accent }}
         >
-          <div className="flex items-start justify-between p-4">
-            <span
-              aria-hidden
-              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white"
-            >
-              <Pill size={24} color="#8a6610" strokeWidth={2} />
-            </span>
-            <span
-              className="rounded-full font-sans"
-              style={{
-                backgroundColor: "#8a6610",
-                color: "#fff",
-                fontSize: "12px",
-                fontWeight: 600,
-                padding: "6px 12px",
-                letterSpacing: "0.04em",
-              }}
-            >
-              2 DUE TODAY
-            </span>
-          </div>
-
-          <div className="flex-1 flex items-end justify-start px-4 pb-3">
-            <Pill size={92} color="rgba(138,102,16,0.18)" strokeWidth={1.6} />
-          </div>
-
-          <div className="m-3 rounded-2xl bg-white px-4 py-3 flex items-center gap-3">
-            <div className="flex-1 min-w-0">
-              <span
-                className="inline-block rounded-full"
-                style={{
-                  backgroundColor: "var(--gold-soft)",
-                  color: "#8a6610",
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  padding: "4px 10px",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                DAWAI
-              </span>
-              <p
-                className="mt-2 font-serif text-ink"
-                style={{ fontSize: "20px", fontWeight: 600, lineHeight: 1.15 }}
-              >
-                Medicines
-              </p>
-              <p
-                className="mt-0.5 font-sans"
-                style={{ fontSize: "13px", color: "var(--ink-2)" }}
-              >
-                5 active · 2 due today
-              </p>
-            </div>
-            <span
-              aria-hidden
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-              style={{ backgroundColor: "var(--gold-soft)" }}
-            >
-              <ChevronRight size={20} color="#8a6610" />
-            </span>
-          </div>
-        </button>
-
-        {/* Appointments — jade */}
-        <SquareTile
-          eyebrow="Next"
-          title={<>Appointments</>}
-          subtitle="Dr Mehta · 15 Jun"
-          bg="var(--jade-soft)"
-          fg="var(--jade)"
-          Icon={CalendarHeart}
-        />
-
-        {/* Vitals — rose */}
-        <SquareTile
-          eyebrow="Last BP"
-          title={<>Vitals</>}
-          subtitle="128 / 82 · 2 days ago"
-          bg="var(--rose-soft, #F5DDD0)"
-          fg="var(--rose, #C2553A)"
-          Icon={HeartPulse}
-        />
+          <Pill size={26} color="#fff" strokeWidth={2} />
+        </span>
       </div>
 
-      {/* Reports — full width marigold */}
-      <button
-        type="button"
-        className="w-full flex items-center gap-4 rounded-card p-4 active:scale-[0.99] transition"
-        style={{ backgroundColor: "var(--marigold-soft)", minHeight: 88 }}
-      >
+      <div className="mt-5 flex items-center gap-3">
+        <div
+          className="h-2 flex-1 rounded-full overflow-hidden"
+          style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
+        >
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${pct}%`, backgroundColor: accent }}
+          />
+        </div>
+        <span
+          className="font-sans"
+          style={{ fontSize: "12px", fontWeight: 700, color: accent }}
+        >
+          {taken}/{total} taken
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function VitalsCard() {
+  const accent = "var(--rose, #C2553A)";
+  return (
+    <button
+      type="button"
+      className="w-full text-left rounded-card p-5 active:scale-[0.99] transition"
+      style={{ backgroundColor: "var(--rose-soft, #F5DDD0)" }}
+    >
+      <div className="flex items-center gap-4">
         <span
           aria-hidden
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white"
         >
-          <FileText size={22} color="var(--marigold)" strokeWidth={2} />
+          <Heart size={22} color={accent as string} strokeWidth={2} fill={accent as string} />
         </span>
-        <div className="flex-1 min-w-0 text-left">
+        <div className="min-w-0">
           <p
             className="font-sans uppercase"
             style={{
               fontSize: "11px",
               letterSpacing: "0.14em",
-              color: "var(--marigold)",
-              fontWeight: 600,
+              fontWeight: 700,
+              color: accent,
             }}
           >
-            Documents
+            Last BP
           </p>
-          <p
-            className="font-serif text-ink"
-            style={{ fontSize: "20px", fontWeight: 600, lineHeight: 1.2 }}
+          <h3
+            className="font-serif"
+            style={{ fontSize: "22px", fontWeight: 600, color: "var(--ink)", lineHeight: 1.15 }}
           >
-            Reports
-          </p>
-          <p
-            className="mt-0.5 font-sans"
-            style={{ fontSize: "13px", color: "var(--ink-2)" }}
-          >
-            8 saved · Tap to upload new
-          </p>
+            Vitals · 128 / 82
+          </h3>
         </div>
-        <ChevronRight size={22} color="var(--marigold)" className="shrink-0" />
-      </button>
-    </div>
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <p
+          className="font-sans"
+          style={{ fontSize: "14px", color: "var(--ink-2)" }}
+        >
+          Checked 2 days ago
+        </p>
+        <span
+          className="rounded-xl font-sans text-white"
+          style={{
+            backgroundColor: accent,
+            fontSize: "13px",
+            fontWeight: 600,
+            padding: "8px 14px",
+          }}
+        >
+          Update now
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function AppointmentsCard() {
+  return (
+    <button
+      type="button"
+      className="w-full text-left rounded-card p-5 active:scale-[0.99] transition flex flex-col"
+      style={{ backgroundColor: "var(--jade-soft)", minHeight: 160 }}
+    >
+      <span
+        aria-hidden
+        className="flex h-10 w-10 items-center justify-center rounded-xl bg-white mb-4"
+      >
+        <CalendarDays size={20} color="var(--jade)" strokeWidth={2} />
+      </span>
+      <p
+        className="font-sans uppercase"
+        style={{
+          fontSize: "11px",
+          letterSpacing: "0.14em",
+          fontWeight: 700,
+          color: "var(--jade)",
+        }}
+      >
+        Next
+      </p>
+      <p
+        className="mt-1 font-serif"
+        style={{ fontSize: "18px", fontWeight: 600, color: "var(--ink)", lineHeight: 1.2 }}
+      >
+        Dr. Mehta
+      </p>
+      <p
+        className="font-sans"
+        style={{ fontSize: "15px", color: "var(--jade)" }}
+      >
+        15 Jun · 11 AM
+      </p>
+    </button>
+  );
+}
+
+function ReportsCard() {
+  return (
+    <button
+      type="button"
+      className="w-full text-left rounded-card p-5 active:scale-[0.99] transition flex flex-col"
+      style={{ backgroundColor: "var(--marigold-soft)", minHeight: 160 }}
+    >
+      <span
+        aria-hidden
+        className="flex h-10 w-10 items-center justify-center rounded-xl bg-white mb-4"
+      >
+        <FileText size={20} color="var(--marigold)" strokeWidth={2} />
+      </span>
+      <p
+        className="font-sans uppercase"
+        style={{
+          fontSize: "11px",
+          letterSpacing: "0.14em",
+          fontWeight: 700,
+          color: "var(--marigold)",
+        }}
+      >
+        Documents
+      </p>
+      <p
+        className="mt-1 font-serif"
+        style={{ fontSize: "18px", fontWeight: 600, color: "var(--ink)", lineHeight: 1.2 }}
+      >
+        Reports
+      </p>
+      <p
+        className="font-sans"
+        style={{ fontSize: "15px", color: "var(--marigold)" }}
+      >
+        8 saved · 3 recent
+      </p>
+    </button>
   );
 }
 
@@ -289,90 +360,31 @@ function FamilyRibbon() {
   return (
     <button
       type="button"
-      className="w-full flex items-center gap-4 rounded-card p-4 active:scale-[0.99] transition"
-      style={{ backgroundColor: "var(--plum)", minHeight: 88 }}
+      className="w-full flex items-center gap-4 rounded-card p-5 active:scale-[0.99] transition"
+      style={{ backgroundColor: "var(--plum)", minHeight: 80 }}
     >
       <span
         aria-hidden
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-        style={{ backgroundColor: "var(--plum-soft)" }}
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+        style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
       >
-        <Users size={22} color="var(--plum)" strokeWidth={2} />
+        <Users size={22} color="#fff" strokeWidth={2} />
       </span>
       <div className="flex-1 min-w-0 text-left">
         <p
-          className="font-sans uppercase"
-          style={{
-            fontSize: "11px",
-            letterSpacing: "0.14em",
-            color: "var(--plum-soft)",
-            fontWeight: 600,
-          }}
+          className="font-serif text-white"
+          style={{ fontSize: "18px", fontWeight: 600, lineHeight: 1.2 }}
         >
-          Connected
+          Family Access
         </p>
         <p
-          className="font-serif text-white"
-          style={{ fontSize: "18px", fontWeight: 500, lineHeight: 1.2 }}
+          className="font-sans"
+          style={{ fontSize: "14px", color: "rgba(255,255,255,0.7)" }}
         >
-          Family Access · 3 members
+          3 members connected
         </p>
       </div>
       <ChevronRight size={22} color="rgba(255,255,255,0.85)" className="shrink-0" />
-    </button>
-  );
-}
-
-type TileProps = {
-  eyebrow: string;
-  title: React.ReactNode;
-  subtitle: string;
-  bg: string;
-  fg: string;
-  Icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
-};
-
-function SquareTile({ eyebrow, title, subtitle, bg, fg, Icon }: TileProps) {
-  return (
-    <button
-      type="button"
-      className="relative overflow-hidden rounded-card text-left p-4 active:scale-[0.98] transition flex flex-col justify-between"
-      style={{ backgroundColor: bg, minHeight: 172 }}
-    >
-      <div className="flex items-start justify-between">
-        <span
-          aria-hidden
-          className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white"
-        >
-          <Icon size={22} color={fg} strokeWidth={2} />
-        </span>
-      </div>
-      <div>
-        <p
-          className="font-sans uppercase"
-          style={{
-            fontSize: "10px",
-            letterSpacing: "0.12em",
-            color: fg,
-            fontWeight: 600,
-            opacity: 0.85,
-          }}
-        >
-          {eyebrow}
-        </p>
-        <h3
-          className="mt-1 font-serif"
-          style={{ fontSize: "20px", fontWeight: 600, color: fg, lineHeight: 1.15 }}
-        >
-          {title}
-        </h3>
-        <p
-          className="mt-1 font-sans"
-          style={{ fontSize: "13px", color: "var(--ink-2)" }}
-        >
-          {subtitle}
-        </p>
-      </div>
     </button>
   );
 }
