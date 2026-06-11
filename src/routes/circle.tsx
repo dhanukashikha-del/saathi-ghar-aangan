@@ -138,6 +138,15 @@ const moments: Moment[] = [
     hellos: 2,
   },
   {
+    kind: "text",
+    id: "m35",
+    who: circle[0],
+    when: "2 hours ago",
+    text: "Good afternoon, friends. The rain has finally stopped — going for my walk now.",
+    tone: "marigold",
+    hellos: 5,
+  },
+  {
     kind: "photo",
     id: "m4",
     who: circle[4],
@@ -145,6 +154,55 @@ const moments: Moment[] = [
     text: "Grandson's first day at school",
     img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=70&auto=format&fit=crop",
     hellos: 7,
+  },
+  {
+    kind: "text",
+    id: "m45",
+    who: circle[5],
+    when: "yesterday",
+    text: "Ma is recovering well after the surgery. Thank you everyone for the kind words 🙏",
+    tone: "jade",
+    hellos: 12,
+  },
+];
+
+type Event = {
+  id: string;
+  title: string;
+  when: string;
+  place: string;
+  tag: string;
+  tone: "jade" | "plum" | "gold";
+  Icon: typeof Stethoscope;
+};
+
+const events: Event[] = [
+  {
+    id: "e1",
+    title: "Free health check-up for elders",
+    when: "Wed, Jul 1 · 4:30 pm",
+    place: "Community Hall, Sector 5",
+    tag: "Health camp",
+    tone: "jade",
+    Icon: Stethoscope,
+  },
+  {
+    id: "e2",
+    title: "Bhajan sandhya at the temple",
+    when: "Fri, Jul 3 · 6:00 pm",
+    place: "Shree Ram Mandir",
+    tag: "Music",
+    tone: "plum",
+    Icon: Music,
+  },
+  {
+    id: "e3",
+    title: "Morning garden walk",
+    when: "Every day · 7:00 am",
+    place: "Shivaji Park gate 3",
+    tag: "Walk",
+    tone: "gold",
+    Icon: Sprout,
   },
 ];
 
