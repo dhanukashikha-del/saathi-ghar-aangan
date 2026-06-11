@@ -10,6 +10,12 @@ import {
   Image as ImageIcon,
   MapPin,
   X,
+  Camera,
+  Quote,
+  ChevronRight,
+  Stethoscope,
+  Music,
+  Sprout,
 } from "lucide-react";
 import { BottomNav } from "@/components/sukhada/BottomNav";
 
@@ -85,6 +91,15 @@ type Moment =
       who: Person;
       when: string;
       ageHint: string;
+    }
+  | {
+      kind: "text";
+      id: string;
+      who: Person;
+      when: string;
+      text: string;
+      tone: "marigold" | "jade" | "plum";
+      hellos: number;
     };
 
 const moments: Moment[] = [
@@ -123,6 +138,15 @@ const moments: Moment[] = [
     hellos: 2,
   },
   {
+    kind: "text",
+    id: "m35",
+    who: circle[0],
+    when: "2 hours ago",
+    text: "Good afternoon, friends. The rain has finally stopped — going for my walk now.",
+    tone: "marigold",
+    hellos: 5,
+  },
+  {
     kind: "photo",
     id: "m4",
     who: circle[4],
@@ -130,6 +154,55 @@ const moments: Moment[] = [
     text: "Grandson's first day at school",
     img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=70&auto=format&fit=crop",
     hellos: 7,
+  },
+  {
+    kind: "text",
+    id: "m45",
+    who: circle[5],
+    when: "yesterday",
+    text: "Ma is recovering well after the surgery. Thank you everyone for the kind words 🙏",
+    tone: "jade",
+    hellos: 12,
+  },
+];
+
+type Event = {
+  id: string;
+  title: string;
+  when: string;
+  place: string;
+  tag: string;
+  tone: "jade" | "plum" | "gold";
+  Icon: typeof Stethoscope;
+};
+
+const events: Event[] = [
+  {
+    id: "e1",
+    title: "Free health check-up for elders",
+    when: "Wed, Jul 1 · 4:30 pm",
+    place: "Community Hall, Sector 5",
+    tag: "Health camp",
+    tone: "jade",
+    Icon: Stethoscope,
+  },
+  {
+    id: "e2",
+    title: "Bhajan sandhya at the temple",
+    when: "Fri, Jul 3 · 6:00 pm",
+    place: "Shree Ram Mandir",
+    tag: "Music",
+    tone: "plum",
+    Icon: Music,
+  },
+  {
+    id: "e3",
+    title: "Morning garden walk",
+    when: "Every day · 7:00 am",
+    place: "Shivaji Park gate 3",
+    tag: "Walk",
+    tone: "gold",
+    Icon: Sprout,
   },
 ];
 
@@ -146,6 +219,7 @@ const presets = [
 
 function CircleScreen() {
   const [helloFor, setHelloFor] = useState<Person | null>(null);
+  const [composerOpen, setComposerOpen] = useState(false);
 
   return (
     <div className="min-h-dvh bg-paper">
@@ -153,12 +227,16 @@ function CircleScreen() {
         <CircleHeader />
         <main className="px-5 pt-2 space-y-6">
           <Greeting />
+          <Composer onOpen={() => setComposerOpen(true)} />
           <PeopleRibbon onTap={setHelloFor} />
+          <EventsStrip />
           <Feed onSayHello={setHelloFor} />
         </main>
       </div>
+      <VoiceFab onTap={() => setComposerOpen(true)} />
       <BottomNav active="circle" />
       {helloFor ? <HelloSheet person={helloFor} onClose={() => setHelloFor(null)} /> : null}
+      {composerOpen ? <ComposerSheet onClose={() => setComposerOpen(false)} /> : null}
     </div>
   );
 }
@@ -317,6 +395,52 @@ function MomentCard({ m, onSayHello }: { m: Moment; onSayHello: (p: Person) => v
         </>
       ) : null}
 
+      {m.kind === "text" ? (
+        <div className="px-4">
+          <div
+            className="relative rounded-2xl p-4 pl-5"
+            style={{
+              backgroundColor:
+                m.tone === "marigold"
+                  ? "var(--marigold-soft)"
+                  : m.tone === "jade"
+                    ? "var(--jade-soft)"
+                    : "var(--plum-soft)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="absolute left-0 top-3 bottom-3 w-1 rounded-full"
+              style={{
+                backgroundColor:
+                  m.tone === "marigold"
+                    ? "var(--marigold)"
+                    : m.tone === "jade"
+                      ? "var(--jade)"
+                      : "var(--plum)",
+              }}
+            />
+            <Quote
+              size={16}
+              color={
+                m.tone === "marigold"
+                  ? "var(--marigold)"
+                  : m.tone === "jade"
+                    ? "var(--jade)"
+                    : "var(--plum)"
+              }
+              className="mb-1"
+            />
+            <p
+              className="font-serif text-ink"
+              style={{ fontSize: 19, fontWeight: 500, lineHeight: 1.35 }}
+            >
+              {m.text}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       {m.kind === "voice" ? (
         <div className="px-4">
           <div
@@ -403,9 +527,9 @@ function MomentCard({ m, onSayHello }: { m: Moment; onSayHello: (p: Person) => v
           </button>
           <span
             className="font-sans"
-            style={{ fontSize: 13, color: "var(--ink-3)", minWidth: 56, textAlign: "right", paddingRight: 4 }}
+            style={{ fontSize: 13, color: "var(--ink-3)", minWidth: 80, textAlign: "right", paddingRight: 4 }}
           >
-            {"hellos" in m ? `${m.hellos} hellos` : null}
+            {"hellos" in m ? (m.hellos > 0 ? `${m.hellos} hellos` : "Be first") : null}
           </span>
         </div>
       ) : null}
@@ -501,6 +625,266 @@ function HelloSheet({ person, onClose }: { person: Person; onClose: () => void }
           <Phone size={18} />
           Call {person.name} instead
         </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- composer (entry tile) ---------- */
+
+function Composer({ onOpen }: { onOpen: () => void }) {
+  return (
+    <section aria-label="Share a thought">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="w-full flex items-center gap-3 rounded-card bg-surface border border-line p-3 pr-2 active:scale-[0.99] transition"
+      >
+        <span
+          aria-hidden
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+          style={{ backgroundColor: "var(--marigold-soft)" }}
+        >
+          <Mic size={20} color="var(--marigold)" />
+        </span>
+        <span
+          className="flex-1 text-left font-sans"
+          style={{ fontSize: 15, color: "var(--ink-3)" }}
+        >
+          Share a thought, Ji…
+        </span>
+        <span
+          aria-hidden
+          className="flex h-10 w-10 items-center justify-center rounded-full"
+          style={{ backgroundColor: "var(--paper)" }}
+        >
+          <Camera size={20} color="var(--ink-2)" />
+        </span>
+      </button>
+    </section>
+  );
+}
+
+/* ---------- events strip ---------- */
+
+function EventsStrip() {
+  return (
+    <section aria-labelledby="events-heading">
+      <div className="flex items-baseline justify-between mb-3">
+        <h2
+          id="events-heading"
+          className="font-serif text-ink"
+          style={{ fontSize: 20, fontWeight: 600 }}
+        >
+          Events near you
+        </h2>
+        <a
+          href="#"
+          className="font-sans text-marigold"
+          style={{ fontSize: 14, fontWeight: 500, textDecoration: "underline", textUnderlineOffset: 3 }}
+        >
+          See all
+        </a>
+      </div>
+      <div className="no-scrollbar -mx-5 overflow-x-auto">
+        <ul className="flex gap-3 px-5 pb-1" style={{ scrollSnapType: "x mandatory" }}>
+          {events.map((e) => {
+            const bg =
+              e.tone === "jade"
+                ? "var(--jade-soft)"
+                : e.tone === "plum"
+                  ? "var(--plum-soft)"
+                  : "var(--gold-soft)";
+            const fg =
+              e.tone === "jade"
+                ? "var(--jade)"
+                : e.tone === "plum"
+                  ? "var(--plum)"
+                  : "#8a6610";
+            return (
+              <li
+                key={e.id}
+                className="shrink-0 rounded-card p-4 flex flex-col"
+                style={{
+                  width: 240,
+                  minHeight: 168,
+                  backgroundColor: bg,
+                  scrollSnapAlign: "start",
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className="rounded-full bg-white font-sans"
+                    style={{
+                      color: fg,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      padding: "4px 10px",
+                    }}
+                  >
+                    {e.tag}
+                  </span>
+                  <e.Icon size={22} color={fg} strokeWidth={1.8} />
+                </div>
+                <p
+                  className="mt-3 font-serif text-ink"
+                  style={{ fontSize: 17, fontWeight: 600, lineHeight: 1.25 }}
+                >
+                  {e.title}
+                </p>
+                <div className="mt-auto pt-3">
+                  <p className="font-sans" style={{ fontSize: 13, color: fg, fontWeight: 600 }}>
+                    {e.when}
+                  </p>
+                  <p
+                    className="font-sans truncate"
+                    style={{ fontSize: 12, color: "var(--ink-2)" }}
+                  >
+                    {e.place}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- voice FAB ---------- */
+
+function VoiceFab({ onTap }: { onTap: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onTap}
+      aria-label="Share a voice note"
+      className="fixed z-40 flex items-center justify-center rounded-full active:scale-95 transition"
+      style={{
+        right: "max(20px, env(safe-area-inset-right))",
+        bottom: "calc(88px + env(safe-area-inset-bottom))",
+        height: 64,
+        width: 64,
+        backgroundColor: "var(--marigold)",
+        boxShadow: "0 12px 28px -8px rgba(232,118,31,0.55)",
+      }}
+    >
+      <Mic size={28} color="#fff" />
+    </button>
+  );
+}
+
+/* ---------- composer sheet ---------- */
+
+function ComposerSheet({ onClose }: { onClose: () => void }) {
+  const [recording, setRecording] = useState(false);
+  const [text, setText] = useState("");
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end"
+      role="dialog"
+      aria-label="Share a moment with your circle"
+    >
+      <button
+        type="button"
+        aria-label="Close"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/40"
+      />
+      <div
+        className="relative w-full max-w-[480px] mx-auto bg-paper rounded-t-3xl p-5"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 24px)" }}
+      >
+        <div className="flex items-center justify-between">
+          <p
+            className="font-serif text-ink"
+            style={{ fontSize: 22, fontWeight: 600 }}
+          >
+            Share with your circle
+          </p>
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border border-line"
+          >
+            <X size={18} color="var(--ink)" />
+          </button>
+        </div>
+
+        <div className="mt-5 flex flex-col items-center">
+          <button
+            type="button"
+            onPointerDown={() => setRecording(true)}
+            onPointerUp={() => setRecording(false)}
+            onPointerLeave={() => setRecording(false)}
+            aria-label="Hold to record voice note"
+            className="flex h-28 w-28 items-center justify-center rounded-full active:scale-95 transition"
+            style={{
+              backgroundColor: recording ? "var(--marigold)" : "var(--marigold-soft)",
+              boxShadow: recording ? "0 0 0 14px rgba(232,118,31,0.18)" : "none",
+            }}
+          >
+            <Mic size={40} color={recording ? "#fff" : "var(--marigold)"} />
+          </button>
+          <p
+            className="mt-3 font-sans"
+            style={{ fontSize: 14, color: "var(--ink-2)" }}
+          >
+            {recording ? "Listening… release to share" : "Hold to record"}
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <p
+            className="font-sans uppercase"
+            style={{
+              fontSize: 11,
+              letterSpacing: "0.14em",
+              color: "var(--ink-3)",
+              fontWeight: 600,
+            }}
+          >
+            Or write a short thought
+          </p>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="How are you feeling today, Ji?"
+            rows={3}
+            className="mt-2 w-full rounded-2xl border border-line bg-surface p-3 font-serif text-ink resize-none"
+            style={{ fontSize: 17, lineHeight: 1.35 }}
+          />
+        </div>
+
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-line bg-surface"
+            aria-label="Add a photo"
+          >
+            <Camera size={20} color="var(--ink-2)" />
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={text.trim().length === 0}
+            className="flex-1 rounded-full font-sans"
+            style={{
+              backgroundColor: text.trim().length === 0 ? "var(--line)" : "var(--marigold)",
+              color: text.trim().length === 0 ? "var(--ink-3)" : "#fff",
+              fontSize: 16,
+              fontWeight: 600,
+              padding: "14px",
+            }}
+          >
+            Share with circle
+          </button>
+        </div>
       </div>
     </div>
   );
