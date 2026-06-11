@@ -395,6 +395,52 @@ function MomentCard({ m, onSayHello }: { m: Moment; onSayHello: (p: Person) => v
         </>
       ) : null}
 
+      {m.kind === "text" ? (
+        <div className="px-4">
+          <div
+            className="relative rounded-2xl p-4 pl-5"
+            style={{
+              backgroundColor:
+                m.tone === "marigold"
+                  ? "var(--marigold-soft)"
+                  : m.tone === "jade"
+                    ? "var(--jade-soft)"
+                    : "var(--plum-soft)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="absolute left-0 top-3 bottom-3 w-1 rounded-full"
+              style={{
+                backgroundColor:
+                  m.tone === "marigold"
+                    ? "var(--marigold)"
+                    : m.tone === "jade"
+                      ? "var(--jade)"
+                      : "var(--plum)",
+              }}
+            />
+            <Quote
+              size={16}
+              color={
+                m.tone === "marigold"
+                  ? "var(--marigold)"
+                  : m.tone === "jade"
+                    ? "var(--jade)"
+                    : "var(--plum)"
+              }
+              className="mb-1"
+            />
+            <p
+              className="font-serif text-ink"
+              style={{ fontSize: 19, fontWeight: 500, lineHeight: 1.35 }}
+            >
+              {m.text}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       {m.kind === "voice" ? (
         <div className="px-4">
           <div
