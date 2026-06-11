@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { z } from "zod";
 import {
   ChevronRight,
   Pill,
@@ -9,10 +10,17 @@ import {
   AlertCircle,
   Bell,
   ArrowLeft,
+  Camera,
+  Sparkles,
 } from "lucide-react";
 import { BottomNav } from "@/components/sukhada/BottomNav";
 
+const searchSchema = z.object({
+  empty: z.coerce.boolean().optional(),
+});
+
 export const Route = createFileRoute("/health")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Your Health, Ji — Sukhada" },
@@ -32,28 +40,213 @@ export const Route = createFileRoute("/health")({
 });
 
 function HealthScreen() {
+  const { empty } = Route.useSearch();
+
   return (
     <div className="min-h-dvh bg-paper">
       <div className="mx-auto w-full max-w-[480px] pb-28">
         <HealthHeader />
 
-        <main className="px-5 space-y-6">
-          <RefillNudge />
-          <TodayGreeting />
+        {empty ? (
+          <FirstTimeState />
+        ) : (
+          <main className="px-5 space-y-6">
+            <RefillNudge />
+            <TodayGreeting />
 
-          <div className="space-y-4">
-            <MedicationsCard />
-            <VitalsCard />
-            <div className="grid grid-cols-2 gap-4">
-              <AppointmentsCard />
-              <ReportsCard />
+            <div className="space-y-4">
+              <MedicationsCard />
+              <VitalsCard />
+              <div className="grid grid-cols-2 gap-4">
+                <AppointmentsCard />
+                <ReportsCard />
+              </div>
+              <FamilyRibbon />
             </div>
-            <FamilyRibbon />
-          </div>
-        </main>
+          </main>
+        )}
       </div>
       <BottomNav active="health" />
     </div>
+  );
+}
+
+function FirstTimeState() {
+  return (
+    <main className="px-5 space-y-5">
+      {/* Greeting */}
+      <div className="pt-2">
+        <p
+          className="font-sans uppercase"
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.16em",
+            fontWeight: 700,
+            color: "var(--marigold)",
+          }}
+        >
+          Welcome
+        </p>
+        <h1
+          className="mt-1 font-serif text-ink"
+          style={{ fontSize: "30px", fontWeight: 600, lineHeight: 1.1 }}
+        >
+          Let's set this up,{" "}
+          <span style={{ color: "var(--marigold)" }}>together</span>
+        </h1>
+        <p
+          className="mt-2 font-sans"
+          style={{ fontSize: "16px", color: "var(--ink-2)" }}
+        >
+          No forms to fill, Ji. Your Saathi will help.
+        </p>
+      </div>
+
+      {/* Primary: Saathi visit card */}
+      <div
+        className="rounded-card overflow-hidden"
+        style={{ backgroundColor: "var(--gold-soft)" }}
+      >
+        <div className="p-5">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-sans uppercase"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.65)",
+              color: "#8a6610",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+            }}
+          >
+            <Sparkles size={12} strokeWidth={2.5} />
+            Thursday, 11 AM
+          </span>
+          <h3
+            className="mt-3 font-serif"
+            style={{
+              fontSize: "22px",
+              fontWeight: 600,
+              color: "#5a4310",
+              lineHeight: 1.2,
+            }}
+          >
+            Anjali will set up your health book on her visit.
+          </h3>
+          <p
+            className="mt-2 font-sans"
+            style={{ fontSize: "15px", color: "#8a6610", lineHeight: 1.5 }}
+          >
+            Just keep your medicines and any reports ready. She'll add
+            everything for you, over chai.
+          </p>
+        </div>
+
+        <div className="flex gap-2 px-5 pb-5">
+          <button
+            type="button"
+            className="flex-1 rounded-2xl py-3 font-sans text-white active:scale-[0.98] transition"
+            style={{
+              backgroundColor: "#8a6610",
+              fontSize: "15px",
+              fontWeight: 600,
+            }}
+          >
+            Confirm visit
+          </button>
+          <button
+            type="button"
+            className="rounded-2xl px-4 py-3 font-sans active:scale-[0.98] transition"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.7)",
+              color: "#8a6610",
+              fontSize: "15px",
+              fontWeight: 600,
+            }}
+          >
+            Reschedule
+          </button>
+        </div>
+      </div>
+
+      {/* Or — snap prescription */}
+      <div className="flex items-center gap-3 px-1">
+        <span className="h-px flex-1" style={{ backgroundColor: "var(--line)" }} />
+        <span
+          className="font-sans uppercase"
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.18em",
+            color: "var(--ink-3)",
+            fontWeight: 600,
+          }}
+        >
+          or, can't wait?
+        </span>
+        <span className="h-px flex-1" style={{ backgroundColor: "var(--line)" }} />
+      </div>
+
+      <button
+        type="button"
+        className="w-full text-left rounded-card p-5 flex items-center gap-4 active:scale-[0.99] transition"
+        style={{ backgroundColor: "var(--marigold-soft)", minHeight: 92 }}
+      >
+        <span
+          aria-hidden
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white"
+        >
+          <Camera size={24} color="var(--marigold)" strokeWidth={2} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <p
+            className="font-serif text-ink"
+            style={{ fontSize: "18px", fontWeight: 600, lineHeight: 1.25 }}
+          >
+            Snap your prescription
+          </p>
+          <p
+            className="mt-1 font-sans"
+            style={{ fontSize: "14px", color: "var(--ink-2)" }}
+          >
+            We'll read the medicines. You just tap to confirm.
+          </p>
+        </div>
+        <ChevronRight size={22} color="var(--marigold)" className="shrink-0" />
+      </button>
+
+      {/* Family helper */}
+      <button
+        type="button"
+        className="w-full flex items-center gap-4 rounded-card p-5 active:scale-[0.99] transition"
+        style={{ backgroundColor: "var(--plum)", minHeight: 88 }}
+      >
+        <span
+          aria-hidden
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+          style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
+        >
+          <Users size={22} color="#fff" strokeWidth={2} />
+        </span>
+        <div className="flex-1 min-w-0 text-left">
+          <p
+            className="font-serif text-white"
+            style={{ fontSize: "17px", fontWeight: 600, lineHeight: 1.25 }}
+          >
+            Or ask family to help
+          </p>
+          <p
+            className="font-sans"
+            style={{ fontSize: "14px", color: "rgba(255,255,255,0.75)" }}
+          >
+            Send a WhatsApp invite to your son or daughter
+          </p>
+        </div>
+        <ChevronRight
+          size={22}
+          color="rgba(255,255,255,0.85)"
+          className="shrink-0"
+        />
+      </button>
+    </main>
   );
 }
 
