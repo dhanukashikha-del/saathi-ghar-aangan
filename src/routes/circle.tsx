@@ -629,3 +629,263 @@ function HelloSheet({ person, onClose }: { person: Person; onClose: () => void }
     </div>
   );
 }
+
+/* ---------- composer (entry tile) ---------- */
+
+function Composer({ onOpen }: { onOpen: () => void }) {
+  return (
+    <section aria-label="Share a thought">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="w-full flex items-center gap-3 rounded-card bg-surface border border-line p-3 pr-2 active:scale-[0.99] transition"
+      >
+        <span
+          aria-hidden
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+          style={{ backgroundColor: "var(--marigold-soft)" }}
+        >
+          <Mic size={20} color="var(--marigold)" />
+        </span>
+        <span
+          className="flex-1 text-left font-sans"
+          style={{ fontSize: 15, color: "var(--ink-3)" }}
+        >
+          Share a thought, Ji…
+        </span>
+        <span
+          aria-hidden
+          className="flex h-10 w-10 items-center justify-center rounded-full"
+          style={{ backgroundColor: "var(--paper)" }}
+        >
+          <Camera size={20} color="var(--ink-2)" />
+        </span>
+      </button>
+    </section>
+  );
+}
+
+/* ---------- events strip ---------- */
+
+function EventsStrip() {
+  return (
+    <section aria-labelledby="events-heading">
+      <div className="flex items-baseline justify-between mb-3">
+        <h2
+          id="events-heading"
+          className="font-serif text-ink"
+          style={{ fontSize: 20, fontWeight: 600 }}
+        >
+          Events near you
+        </h2>
+        <a
+          href="#"
+          className="font-sans text-marigold"
+          style={{ fontSize: 14, fontWeight: 500, textDecoration: "underline", textUnderlineOffset: 3 }}
+        >
+          See all
+        </a>
+      </div>
+      <div className="no-scrollbar -mx-5 overflow-x-auto">
+        <ul className="flex gap-3 px-5 pb-1" style={{ scrollSnapType: "x mandatory" }}>
+          {events.map((e) => {
+            const bg =
+              e.tone === "jade"
+                ? "var(--jade-soft)"
+                : e.tone === "plum"
+                  ? "var(--plum-soft)"
+                  : "var(--gold-soft)";
+            const fg =
+              e.tone === "jade"
+                ? "var(--jade)"
+                : e.tone === "plum"
+                  ? "var(--plum)"
+                  : "#8a6610";
+            return (
+              <li
+                key={e.id}
+                className="shrink-0 rounded-card p-4 flex flex-col"
+                style={{
+                  width: 240,
+                  minHeight: 168,
+                  backgroundColor: bg,
+                  scrollSnapAlign: "start",
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className="rounded-full bg-white font-sans"
+                    style={{
+                      color: fg,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      padding: "4px 10px",
+                    }}
+                  >
+                    {e.tag}
+                  </span>
+                  <e.Icon size={22} color={fg} strokeWidth={1.8} />
+                </div>
+                <p
+                  className="mt-3 font-serif text-ink"
+                  style={{ fontSize: 17, fontWeight: 600, lineHeight: 1.25 }}
+                >
+                  {e.title}
+                </p>
+                <div className="mt-auto pt-3">
+                  <p className="font-sans" style={{ fontSize: 13, color: fg, fontWeight: 600 }}>
+                    {e.when}
+                  </p>
+                  <p
+                    className="font-sans truncate"
+                    style={{ fontSize: 12, color: "var(--ink-2)" }}
+                  >
+                    {e.place}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- voice FAB ---------- */
+
+function VoiceFab({ onTap }: { onTap: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onTap}
+      aria-label="Share a voice note"
+      className="fixed z-40 flex items-center justify-center rounded-full active:scale-95 transition"
+      style={{
+        right: "max(20px, env(safe-area-inset-right))",
+        bottom: "calc(88px + env(safe-area-inset-bottom))",
+        height: 64,
+        width: 64,
+        backgroundColor: "var(--marigold)",
+        boxShadow: "0 12px 28px -8px rgba(232,118,31,0.55)",
+      }}
+    >
+      <Mic size={28} color="#fff" />
+    </button>
+  );
+}
+
+/* ---------- composer sheet ---------- */
+
+function ComposerSheet({ onClose }: { onClose: () => void }) {
+  const [recording, setRecording] = useState(false);
+  const [text, setText] = useState("");
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end"
+      role="dialog"
+      aria-label="Share a moment with your circle"
+    >
+      <button
+        type="button"
+        aria-label="Close"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/40"
+      />
+      <div
+        className="relative w-full max-w-[480px] mx-auto bg-paper rounded-t-3xl p-5"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 24px)" }}
+      >
+        <div className="flex items-center justify-between">
+          <p
+            className="font-serif text-ink"
+            style={{ fontSize: 22, fontWeight: 600 }}
+          >
+            Share with your circle
+          </p>
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border border-line"
+          >
+            <X size={18} color="var(--ink)" />
+          </button>
+        </div>
+
+        <div className="mt-5 flex flex-col items-center">
+          <button
+            type="button"
+            onPointerDown={() => setRecording(true)}
+            onPointerUp={() => setRecording(false)}
+            onPointerLeave={() => setRecording(false)}
+            aria-label="Hold to record voice note"
+            className="flex h-28 w-28 items-center justify-center rounded-full active:scale-95 transition"
+            style={{
+              backgroundColor: recording ? "var(--marigold)" : "var(--marigold-soft)",
+              boxShadow: recording ? "0 0 0 14px rgba(232,118,31,0.18)" : "none",
+            }}
+          >
+            <Mic size={40} color={recording ? "#fff" : "var(--marigold)"} />
+          </button>
+          <p
+            className="mt-3 font-sans"
+            style={{ fontSize: 14, color: "var(--ink-2)" }}
+          >
+            {recording ? "Listening… release to share" : "Hold to record"}
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <p
+            className="font-sans uppercase"
+            style={{
+              fontSize: 11,
+              letterSpacing: "0.14em",
+              color: "var(--ink-3)",
+              fontWeight: 600,
+            }}
+          >
+            Or write a short thought
+          </p>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="How are you feeling today, Ji?"
+            rows={3}
+            className="mt-2 w-full rounded-2xl border border-line bg-surface p-3 font-serif text-ink resize-none"
+            style={{ fontSize: 17, lineHeight: 1.35 }}
+          />
+        </div>
+
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-line bg-surface"
+            aria-label="Add a photo"
+          >
+            <Camera size={20} color="var(--ink-2)" />
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={text.trim().length === 0}
+            className="flex-1 rounded-full font-sans"
+            style={{
+              backgroundColor: text.trim().length === 0 ? "var(--line)" : "var(--marigold)",
+              color: text.trim().length === 0 ? "var(--ink-3)" : "#fff",
+              fontSize: 16,
+              fontWeight: 600,
+              padding: "14px",
+            }}
+          >
+            Share with circle
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
