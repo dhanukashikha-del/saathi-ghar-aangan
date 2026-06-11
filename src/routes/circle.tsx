@@ -10,6 +10,12 @@ import {
   Image as ImageIcon,
   MapPin,
   X,
+  Camera,
+  Quote,
+  ChevronRight,
+  Stethoscope,
+  Music,
+  Sprout,
 } from "lucide-react";
 import { BottomNav } from "@/components/sukhada/BottomNav";
 
