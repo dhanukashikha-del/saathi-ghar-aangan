@@ -9,31 +9,33 @@ import {
   Sprout,
   ChevronRight,
   MapPin,
-  Clock,
+  Star,
+  Calendar,
   Sparkles,
+  Check,
 } from "lucide-react";
 import { BottomNav } from "@/components/sukhada/BottomNav";
 
 export const Route = createFileRoute("/volunteer")({
   head: () => ({
     meta: [
-      { title: "Become a Saathi — Sukhada" },
+      { title: "Book a Saathi — Sukhada" },
       {
         name: "description",
         content:
-          "Give an hour a week to a senior near you. Choose how you help — a visit, a phone call, a clinic ride, or a garden afternoon.",
+          "Book a trusted Saathi for a home visit, a clinic ride, a phone call, or a garden afternoon — verified volunteers near you.",
       },
-      { property: "og:title", content: "Become a Saathi — Sukhada" },
+      { property: "og:title", content: "Book a Saathi — Sukhada" },
       {
         property: "og:description",
-        content: "A warm, simple way to volunteer with seniors in your neighbourhood.",
+        content: "Trusted, verified volunteers for seniors — booked in a few taps.",
       },
     ],
   }),
   component: VolunteerScreen,
 });
 
-type Way = {
+type Help = {
   id: string;
   title: string;
   blurb: string;
@@ -42,95 +44,99 @@ type Way = {
   ink: string;
 };
 
-const ways: Way[] = [
+const helps: Help[] = [
   {
     id: "visit",
     title: "Home visit",
-    blurb: "Chai, conversation, a little company.",
+    blurb: "Chai & conversation, an hour or two.",
     Icon: HomeIcon,
     tint: "var(--marigold-soft)",
     ink: "var(--marigold)",
   },
   {
-    id: "call",
-    title: "Phone friend",
-    blurb: "A 20-minute call, once a week.",
-    Icon: Phone,
-    tint: "var(--jade-soft)",
-    ink: "var(--jade)",
-  },
-  {
     id: "clinic",
     title: "Clinic ride",
-    blurb: "Accompany Uncle or Aunty to a check-up.",
+    blurb: "A Saathi to take you, and bring you home.",
     Icon: Stethoscope,
     tint: "var(--plum-soft)",
     ink: "var(--plum)",
   },
   {
+    id: "call",
+    title: "Phone friend",
+    blurb: "A warm call, twice a week.",
+    Icon: Phone,
+    tint: "var(--jade-soft)",
+    ink: "var(--jade)",
+  },
+  {
     id: "garden",
     title: "Garden afternoon",
-    blurb: "Help with the tulsi, share a samosa.",
+    blurb: "Tulsi, sunshine, a samosa together.",
     Icon: Sprout,
     tint: "var(--gold-soft)",
     ink: "var(--gold)",
   },
 ];
 
-type Opening = {
+const slots = [
+  { day: "Today", date: "2 Jun", time: "4:00 pm" },
+  { day: "Tomorrow", date: "3 Jun", time: "11:00 am" },
+  { day: "Thursday", date: "4 Jun", time: "5:30 pm" },
+  { day: "Saturday", date: "6 Jun", time: "10:00 am" },
+];
+
+type Saathi = {
   id: string;
   name: string;
   age: number;
-  need: string;
-  area: string;
-  when: string;
+  km: string;
+  rating: number;
+  visits: number;
   img: string;
-  tag: string;
-  tagInk: string;
-  tagBg: string;
+  note: string;
+  badges: string[];
 };
 
-const openings: Opening[] = [
+const saathis: Saathi[] = [
   {
-    id: "1",
-    name: "Ramesh Uncle",
-    age: 78,
-    need: "Wants someone to read the morning paper with him.",
-    area: "Indiranagar · 1.2 km",
-    when: "Tue & Fri mornings",
-    img: "https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=300&q=70&auto=format&fit=crop",
-    tag: "Home visit",
-    tagInk: "var(--marigold)",
-    tagBg: "var(--marigold-soft)",
+    id: "anjali",
+    name: "Anjali",
+    age: 32,
+    km: "1.1 km",
+    rating: 4.9,
+    visits: 84,
+    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=70&auto=format&fit=crop",
+    note: "Speaks Hindi & Kannada. Loves old film songs.",
+    badges: ["Verified", "First-aid"],
   },
   {
-    id: "2",
-    name: "Lakshmi Aunty",
-    age: 71,
-    need: "A weekly phone call. Loves talking about her grandchildren.",
-    area: "Jayanagar · phone",
-    when: "Any evening",
-    img: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=300&q=70&auto=format&fit=crop",
-    tag: "Phone friend",
-    tagInk: "var(--jade)",
-    tagBg: "var(--jade-soft)",
+    id: "vikram",
+    name: "Vikram",
+    age: 28,
+    km: "2.3 km",
+    rating: 4.8,
+    visits: 51,
+    img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=300&q=70&auto=format&fit=crop",
+    note: "Doctor by training. Patient and gentle.",
+    badges: ["Verified", "Medical"],
   },
   {
-    id: "3",
-    name: "Prakash Uncle",
-    age: 82,
-    need: "Ride to the cardiologist, monthly.",
-    area: "Koramangala · 3 km",
-    when: "First Saturday",
-    img: "https://images.unsplash.com/photo-1545048702-79362596cdc9?w=300&q=70&auto=format&fit=crop",
-    tag: "Clinic ride",
-    tagInk: "var(--plum)",
-    tagBg: "var(--plum-soft)",
+    id: "meera",
+    name: "Meera",
+    age: 41,
+    km: "0.8 km",
+    rating: 5.0,
+    visits: 132,
+    img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&q=70&auto=format&fit=crop",
+    note: "Reads beautifully. Brings homemade ladoos.",
+    badges: ["Verified", "Top-rated"],
   },
 ];
 
 function VolunteerScreen() {
-  const [selected, setSelected] = useState<string>("visit");
+  const [help, setHelp] = useState("visit");
+  const [slot, setSlot] = useState(0);
 
   return (
     <div className="min-h-screen bg-paper">
@@ -148,7 +154,7 @@ function VolunteerScreen() {
             className="font-sans font-medium uppercase text-marigold"
             style={{ fontSize: "11px", letterSpacing: "0.14em" }}
           >
-            Saathi Programme
+            Saathi on call
           </p>
           <div className="h-11 w-11" />
         </div>
@@ -171,69 +177,35 @@ function VolunteerScreen() {
                 className="font-sans font-medium"
                 style={{ fontSize: "12px", color: "var(--marigold)" }}
               >
-                One hour. One senior. One week.
+                Verified · Background-checked · Free
               </span>
             </div>
             <h1
               className="font-serif text-ink mt-4"
               style={{ fontSize: "30px", lineHeight: 1.15, fontWeight: 500 }}
             >
-              Become a Saathi in your neighbourhood
+              Need a hand today, Sharmila Ji?
             </h1>
             <p
               className="mt-3 font-sans"
               style={{ fontSize: "15px", lineHeight: 1.5, color: "var(--ink-2)" }}
             >
-              Small acts of company go a long way. Pick how you'd like to help
-              — we'll match you with a senior nearby.
+              Book a kind, trusted Saathi to drop by, take you to the clinic,
+              or simply spend an hour with you.
             </p>
-
-            {/* Stats row */}
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              {[
-                { n: "1,240", l: "Saathis" },
-                { n: "3,890", l: "Visits" },
-                { n: "42", l: "Cities" },
-              ].map((s) => (
-                <div
-                  key={s.l}
-                  className="rounded-[14px] bg-surface px-3 py-3 text-center border border-line"
-                >
-                  <p
-                    className="font-serif text-ink"
-                    style={{ fontSize: "20px", fontWeight: 500 }}
-                  >
-                    {s.n}
-                  </p>
-                  <p
-                    className="font-sans"
-                    style={{ fontSize: "11px", color: "var(--ink-3)" }}
-                  >
-                    {s.l}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
-        {/* Ways to help */}
+        {/* Step 1 — What kind of help */}
         <section className="px-5 mt-8">
-          <div className="flex items-baseline justify-between">
-            <h2
-              className="font-serif text-ink"
-              style={{ fontSize: "20px", fontWeight: 500 }}
-            >
-              How would you like to help?
-            </h2>
-          </div>
+          <StepLabel n={1} label="What would you like help with?" />
           <div className="mt-4 grid grid-cols-2 gap-3">
-            {ways.map((w) => {
-              const active = selected === w.id;
+            {helps.map((w) => {
+              const active = help === w.id;
               return (
                 <button
                   key={w.id}
-                  onClick={() => setSelected(w.id)}
+                  onClick={() => setHelp(w.id)}
                   className="text-left rounded-[18px] bg-surface p-4 border transition active:scale-[0.98]"
                   style={{
                     borderColor: active ? w.ink : "var(--line)",
@@ -242,11 +214,21 @@ function VolunteerScreen() {
                       : "var(--shadow-soft)",
                   }}
                 >
-                  <div
-                    className="h-10 w-10 rounded-full flex items-center justify-center"
-                    style={{ background: w.tint }}
-                  >
-                    <w.Icon size={20} color={w.ink} />
+                  <div className="flex items-start justify-between">
+                    <div
+                      className="h-10 w-10 rounded-full flex items-center justify-center"
+                      style={{ background: w.tint }}
+                    >
+                      <w.Icon size={20} color={w.ink} />
+                    </div>
+                    {active && (
+                      <div
+                        className="h-6 w-6 rounded-full flex items-center justify-center"
+                        style={{ background: w.ink }}
+                      >
+                        <Check size={14} color="#fff" strokeWidth={3} />
+                      </div>
+                    )}
                   </div>
                   <p
                     className="mt-3 font-serif text-ink"
@@ -266,15 +248,54 @@ function VolunteerScreen() {
           </div>
         </section>
 
-        {/* Openings */}
+        {/* Step 2 — When */}
+        <section className="px-5 mt-8">
+          <StepLabel n={2} label="When works for you?" />
+          <div className="mt-4 -mx-5 px-5 flex gap-3 overflow-x-auto no-scrollbar">
+            {slots.map((s, i) => {
+              const active = slot === i;
+              return (
+                <button
+                  key={s.date}
+                  onClick={() => setSlot(i)}
+                  className="shrink-0 rounded-[16px] px-4 py-3 border transition active:scale-[0.98]"
+                  style={{
+                    minWidth: 124,
+                    background: active ? "var(--ink)" : "var(--surface)",
+                    borderColor: active ? "var(--ink)" : "var(--line)",
+                    boxShadow: active ? "none" : "var(--shadow-soft)",
+                  }}
+                >
+                  <p
+                    className="font-sans font-medium uppercase"
+                    style={{
+                      fontSize: "10px",
+                      letterSpacing: "0.12em",
+                      color: active ? "var(--gold-soft)" : "var(--ink-3)",
+                    }}
+                  >
+                    {s.day} · {s.date}
+                  </p>
+                  <p
+                    className="font-serif mt-1"
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 500,
+                      color: active ? "#FFF8EC" : "var(--ink)",
+                    }}
+                  >
+                    {s.time}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Step 3 — Saathis */}
         <section className="px-5 mt-8">
           <div className="flex items-baseline justify-between">
-            <h2
-              className="font-serif text-ink"
-              style={{ fontSize: "20px", fontWeight: 500 }}
-            >
-              Seniors near you
-            </h2>
+            <StepLabel n={3} label="Saathis near you" inline />
             <button
               className="font-sans font-medium flex items-center gap-1"
               style={{ fontSize: "13px", color: "var(--marigold)" }}
@@ -284,14 +305,14 @@ function VolunteerScreen() {
           </div>
 
           <ul className="mt-4 space-y-3">
-            {openings.map((o) => (
+            {saathis.map((s) => (
               <li
-                key={o.id}
+                key={s.id}
                 className="rounded-[18px] bg-surface border border-line shadow-soft p-4 flex gap-4"
               >
                 <img
-                  src={o.img}
-                  alt={o.name}
+                  src={s.img}
+                  alt={s.name}
                   className="h-16 w-16 rounded-2xl object-cover shrink-0"
                   loading="lazy"
                 />
@@ -301,41 +322,53 @@ function VolunteerScreen() {
                       className="font-serif text-ink truncate"
                       style={{ fontSize: "17px", fontWeight: 500 }}
                     >
-                      {o.name}
+                      {s.name}
                       <span
                         className="font-sans font-normal ml-1"
                         style={{ color: "var(--ink-3)", fontSize: "13px" }}
                       >
-                        · {o.age}
+                        · {s.age}
                       </span>
                     </p>
                     <span
-                      className="rounded-full px-2 py-0.5 font-sans font-medium shrink-0"
-                      style={{
-                        fontSize: "11px",
-                        background: o.tagBg,
-                        color: o.tagInk,
-                      }}
+                      className="inline-flex items-center gap-1 font-sans font-medium"
+                      style={{ fontSize: "13px", color: "var(--ink)" }}
                     >
-                      {o.tag}
+                      <Star size={13} fill="var(--gold)" color="var(--gold)" />
+                      {s.rating.toFixed(1)}
                     </span>
                   </div>
                   <p
                     className="mt-1 font-sans"
                     style={{ fontSize: "14px", color: "var(--ink-2)", lineHeight: 1.45 }}
                   >
-                    {o.need}
+                    {s.note}
                   </p>
                   <div
                     className="mt-2 flex items-center gap-3 font-sans"
                     style={{ fontSize: "12px", color: "var(--ink-3)" }}
                   >
                     <span className="inline-flex items-center gap-1">
-                      <MapPin size={12} /> {o.area}
+                      <MapPin size={12} /> {s.km}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <Clock size={12} /> {o.when}
+                      <Calendar size={12} /> {s.visits} visits
                     </span>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {s.badges.map((b) => (
+                      <span
+                        key={b}
+                        className="rounded-full px-2 py-0.5 font-sans font-medium"
+                        style={{
+                          fontSize: "11px",
+                          background: "var(--jade-soft)",
+                          color: "var(--jade)",
+                        }}
+                      >
+                        {b}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </li>
@@ -343,7 +376,7 @@ function VolunteerScreen() {
           </ul>
         </section>
 
-        {/* Quote */}
+        {/* Reassurance */}
         <section className="px-5 mt-8">
           <div
             className="rounded-[18px] p-5 border border-line"
@@ -351,15 +384,10 @@ function VolunteerScreen() {
           >
             <p
               className="font-serif text-ink"
-              style={{ fontSize: "17px", lineHeight: 1.45, fontWeight: 500 }}
+              style={{ fontSize: "16px", lineHeight: 1.45, fontWeight: 500 }}
             >
-              "I came to give an hour. I left with a grandfather."
-            </p>
-            <p
-              className="mt-2 font-sans"
-              style={{ fontSize: "13px", color: "var(--ink-2)" }}
-            >
-              Ananya, Saathi since 2024
+              Every Saathi is background-checked, trained, and rated by other
+              seniors. Your family is notified before every visit.
             </p>
           </div>
         </section>
@@ -377,11 +405,42 @@ function VolunteerScreen() {
           className="w-full rounded-[14px] py-4 font-sans font-semibold text-surface active:scale-[0.99] transition shadow-soft inline-flex items-center justify-center gap-2"
           style={{ background: "var(--marigold)", fontSize: "16px" }}
         >
-          <HandHeart size={18} /> Apply to be a Saathi
+          <HandHeart size={18} /> Request a Saathi · {slots[slot].day}, {slots[slot].time}
         </button>
       </div>
 
       <BottomNav active="more" />
+    </div>
+  );
+}
+
+function StepLabel({
+  n,
+  label,
+  inline,
+}: {
+  n: number;
+  label: string;
+  inline?: boolean;
+}) {
+  return (
+    <div className={inline ? "inline-flex items-center gap-3" : "flex items-center gap-3"}>
+      <span
+        className="h-6 w-6 rounded-full inline-flex items-center justify-center font-sans font-semibold"
+        style={{
+          background: "var(--marigold-soft)",
+          color: "var(--marigold)",
+          fontSize: "12px",
+        }}
+      >
+        {n}
+      </span>
+      <h2
+        className="font-serif text-ink"
+        style={{ fontSize: "20px", fontWeight: 500 }}
+      >
+        {label}
+      </h2>
     </div>
   );
 }
