@@ -68,7 +68,7 @@ export function FeatureGrid() {
               <ChevronRight size={20} color="var(--marigold)" />
             </span>
           </div>
-        </button>
+        </Link>
 
         {/* Jade — Need company today */}
         <button
