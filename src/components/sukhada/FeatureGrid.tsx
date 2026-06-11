@@ -6,8 +6,8 @@ export function FeatureGrid() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         {/* Hero tile — Your Circle */}
-        <button
-          type="button"
+        <Link
+          to="/circle"
           className="relative overflow-hidden rounded-card text-left row-span-2 active:scale-[0.99] transition flex flex-col"
           style={{ backgroundColor: "var(--marigold)", minHeight: 360 }}
         >
