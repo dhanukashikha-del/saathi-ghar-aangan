@@ -219,6 +219,7 @@ const presets = [
 
 function CircleScreen() {
   const [helloFor, setHelloFor] = useState<Person | null>(null);
+  const [composerOpen, setComposerOpen] = useState(false);
 
   return (
     <div className="min-h-dvh bg-paper">
@@ -226,12 +227,16 @@ function CircleScreen() {
         <CircleHeader />
         <main className="px-5 pt-2 space-y-6">
           <Greeting />
+          <Composer onOpen={() => setComposerOpen(true)} />
           <PeopleRibbon onTap={setHelloFor} />
+          <EventsStrip />
           <Feed onSayHello={setHelloFor} />
         </main>
       </div>
+      <VoiceFab onTap={() => setComposerOpen(true)} />
       <BottomNav active="circle" />
       {helloFor ? <HelloSheet person={helloFor} onClose={() => setHelloFor(null)} /> : null}
+      {composerOpen ? <ComposerSheet onClose={() => setComposerOpen(false)} /> : null}
     </div>
   );
 }
