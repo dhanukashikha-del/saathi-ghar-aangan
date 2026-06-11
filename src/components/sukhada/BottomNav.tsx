@@ -1,10 +1,11 @@
-import { Home, HeartPulse, MoreHorizontal } from "lucide-react";
+import { Home, HeartPulse, Users, MoreHorizontal } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 type Tab = { id: string; label: string; Icon: typeof Home; to: string };
 
 const tabs: Tab[] = [
   { id: "home", label: "Home", Icon: Home, to: "/" },
+  { id: "circle", label: "Circle", Icon: Users, to: "/circle" },
   { id: "health", label: "Health", Icon: HeartPulse, to: "/health" },
   { id: "more", label: "More", Icon: MoreHorizontal, to: "/" },
 ];
@@ -16,7 +17,7 @@ export function BottomNav({ active = "home" }: { active?: string }) {
       className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-surface border-t border-line"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="grid grid-cols-3" style={{ height: 72 }}>
+      <ul className="grid grid-cols-4" style={{ height: 72 }}>
         {tabs.map(({ id, label, Icon, to }) => {
           const isActive = id === active;
           return (

@@ -1,12 +1,13 @@
 import { ChevronRight, UsersRound, Coffee, HeartPulse, CalendarDays } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function FeatureGrid() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         {/* Hero tile — Your Circle */}
-        <button
-          type="button"
+        <Link
+          to="/circle"
           className="relative overflow-hidden rounded-card text-left row-span-2 active:scale-[0.99] transition flex flex-col"
           style={{ backgroundColor: "var(--marigold)", minHeight: 360 }}
         >
@@ -67,7 +68,7 @@ export function FeatureGrid() {
               <ChevronRight size={20} color="var(--marigold)" />
             </span>
           </div>
-        </button>
+        </Link>
 
         {/* Jade — Need company today */}
         <button
