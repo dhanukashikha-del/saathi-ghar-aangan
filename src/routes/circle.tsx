@@ -527,9 +527,9 @@ function MomentCard({ m, onSayHello }: { m: Moment; onSayHello: (p: Person) => v
           </button>
           <span
             className="font-sans"
-            style={{ fontSize: 13, color: "var(--ink-3)", minWidth: 56, textAlign: "right", paddingRight: 4 }}
+            style={{ fontSize: 13, color: "var(--ink-3)", minWidth: 80, textAlign: "right", paddingRight: 4 }}
           >
-            {"hellos" in m ? `${m.hellos} hellos` : null}
+            {"hellos" in m ? (m.hellos > 0 ? `${m.hellos} hellos` : "Be first") : null}
           </span>
         </div>
       ) : null}
