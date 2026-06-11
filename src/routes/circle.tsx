@@ -91,6 +91,15 @@ type Moment =
       who: Person;
       when: string;
       ageHint: string;
+    }
+  | {
+      kind: "text";
+      id: string;
+      who: Person;
+      when: string;
+      text: string;
+      tone: "marigold" | "jade" | "plum";
+      hellos: number;
     };
 
 const moments: Moment[] = [
