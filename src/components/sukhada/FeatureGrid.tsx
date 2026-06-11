@@ -1,4 +1,5 @@
 import { ChevronRight, UsersRound, Coffee, HeartPulse, CalendarDays } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function FeatureGrid() {
   return (
